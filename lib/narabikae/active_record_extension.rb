@@ -17,11 +17,23 @@ module Narabikae
     end
 
     def set_position
-      record.send("#{option.field}=", position_generator.create_last_position)
+      record.send("#{option.field}=", option.insert_at == :last ? position_generator.create_last_position : position_generator.create_first_position)
+    end
+
+    def calculate_position_after(target, **args)
+      position_generator.find_position_after(target, **args)
+    end
+
+    def calculate_position_before(target, **args)
+      position_generator.find_position_before(target, **args)
+    end
+
+    def calculate_position_between(prev_target, next_target, **args)
+      position_generator.find_position_between(prev_target, next_target, **args)
     end
 
     def move_to_after(target, **args)
-      new_position = position_generator.find_position_after(target, **args)
+      new_position = calculate_position_after(target, **args)
       return false if new_position.blank?
 
       record.send("#{option.field}=", new_position)
@@ -29,7 +41,7 @@ module Narabikae
     end
 
     def move_to_before(target, **args)
-      new_position = position_generator.find_position_before(target, **args)
+      new_position = calculate_position_before(target, **args)
       return false if new_position.blank?
 
       record.send("#{option.field}=", new_position)
@@ -37,7 +49,7 @@ module Narabikae
     end
 
     def move_to_between(prev_target, next_target, **args)
-      new_position = position_generator.find_position_between(prev_target, next_target, **args)
+      new_position = calculate_position_between(prev_target, next_target, **args)
       return false if new_position.blank?
 
       record.send("#{option.field}=", new_position)

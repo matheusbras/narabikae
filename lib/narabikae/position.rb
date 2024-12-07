@@ -16,6 +16,13 @@ module Narabikae
       FractionalIndexer.generate_key(prev_key: current_last_position)
     end
 
+    # Generates a new key for the first position
+    #
+    # @return [String] The newly generated key for the first position.
+    def create_first_position
+      FractionalIndexer.generate_key(next_key: current_first_position)
+    end
+
     # Finds the position after the specified target.
     # If generated key is invalid(ex: it already exists),
     # a new key is generated until the challenge count reaches the limit.
